@@ -17,7 +17,6 @@ export default {
   components: {},
   computed: {
     dayName: (classData) => {
-      console.log("computed: ", classData.classData);
       let d = new Date(classData.classData.date);
       return d.toLocaleString(window.navigator.language, { weekday: "long" });
     },

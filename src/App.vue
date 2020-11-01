@@ -21,7 +21,7 @@
           <hr />
           <div class="card-columns">
             <nextClass
-              v-for="classData in nextClassesSortedbyDate"
+              v-for="classData in classesSortedbyDate"
               :key="classData.id"
               :classData="classData"
             />
@@ -39,11 +39,13 @@ export default {
   name: "App",
   data() {
     return {
-      nextClassesSortedbyDate: "",
+      classesSortedbyDate: "",
+      nextThreeClasses: "",
       currentClass: "",
     };
   },
   mounted() {
+    // TODO: get current date and query data with it
     this.$http
       .post(
         "https://www.sportsnow.ch/platform/api/v1/public/provider/leone-academy-liebefeld/live_calendar",
@@ -60,7 +62,7 @@ export default {
   },
   methods: {
     async processData(response) {
-      this.nextClassesSortedbyDate = response
+      this.classesSortedbyDate = response
         .sort((x, y) => {
           return x.date - y.date;
         })
