@@ -4,6 +4,7 @@
       <strong> {{ classData.name }} </strong>
     </div>
     <div class="card-body">
+      <strong>{{ dayName }}</strong>
       <div>{{ classData.time_begin }} - {{ classData.time_end }}</div>
     </div>
   </div>
@@ -14,6 +15,13 @@ export default {
   name: "NextClass",
   props: ["classData"],
   components: {},
+  computed: {
+    dayName: (classData) => {
+      console.log("computed: ", classData.classData);
+      let d = new Date(classData.classData.date);
+      return d.toLocaleString(window.navigator.language, { weekday: "long" });
+    },
+  },
 };
 </script>
 

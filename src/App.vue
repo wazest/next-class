@@ -1,18 +1,30 @@
 <template>
   <div id="app">
-    <div id="app">
-      <div class="container mt-5">
-        <div class="row">
-          <div class="col-12">
-            <h2>Next Classes</h2>
-            <hr />
-            <div class="card-columns">
-              <nextClass
-                v-for="classData in state.nextClassesData"
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-12">
+          <h2>Aktuelles Training</h2>
+          <hr />
+          <div class="card-columns">
+            <div v-if="!currentClass">Zur Zeit läuft kein Training</div>
+            <!-- <nextClass
+                v-for="classData in nextClassesSorted"
                 :key="classData.id"
                 :classData="classData"
-              />
-            </div>
+              /> -->
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <h2>Kommende Trainings</h2>
+          <hr />
+          <div class="card-columns">
+            <nextClass
+              v-for="classData in nextClassesSortedbyDate"
+              :key="classData.id"
+              :classData="classData"
+            />
           </div>
         </div>
       </div>
@@ -21,26 +33,39 @@
 </template>
 
 <script>
-import { store } from "./store";
 import NextClass from "./components/NextClass";
 
 export default {
   name: "App",
   data() {
-    console.log(store);
     return {
-      state: store.state,
+      nextClassesSortedbyDate: "",
+      currentClass: "",
     };
   },
   mounted() {
     this.$http
       .post(
-        "https://www.sportsnow.ch/platform/api/v1/public/provider/leone-academy-liebefeld/live_calendar"
+        "https://www.sportsnow.ch/platform/api/v1/public/provider/leone-academy-liebefeld/live_calendar",
+        {
+          date: "2020-11-02", // 01
+        }
       )
       .then((response) => {
         console.log("SPORTSNOW_RESPONSE: ", response.data);
-        this.state.nextClassesData = response.data;
+        response.data &&
+          response.data.length &&
+          this.processData(response.data);
       });
+  },
+  methods: {
+    async processData(response) {
+      this.nextClassesSortedbyDate = response
+        .sort((x, y) => {
+          return x.date - y.date;
+        })
+        .slice(0, 3);
+    },
   },
   components: {
     NextClass,
