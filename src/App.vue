@@ -1,18 +1,40 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <div id="app">
+      <div class="container mt-5">
+        <div class="row">
+          <div class="col-12">
+            <h2>Next Classes</h2>
+            <hr />
+            <div class="card-columns">
+              <nextClass
+                v-for="classData in state.nextClassesData"
+                :key="classData.id"
+                :classData="classData"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import { store } from "./store";
+import NextClass from "./components/NextClass";
 
 export default {
   name: "App",
+  data() {
+    console.log(store);
+    return {
+      state: store.state,
+    };
+  },
   components: {
-    HelloWorld
-  }
+    NextClass,
+  },
 };
 </script>
 
