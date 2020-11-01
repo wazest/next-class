@@ -32,6 +32,16 @@ export default {
       state: store.state,
     };
   },
+  mounted() {
+    this.$http
+      .post(
+        "https://www.sportsnow.ch/platform/api/v1/public/provider/leone-academy-liebefeld/live_calendar"
+      )
+      .then((response) => {
+        console.log("SPORTSNOW_RESPONSE: ", response.data);
+        this.state.nextClassesData = response.data;
+      });
+  },
   components: {
     NextClass,
   },
