@@ -40,17 +40,16 @@ export default {
   data() {
     return {
       classesSortedbyDate: "",
-      nextThreeClasses: "",
+      nextThreeClasses: [],
       currentClass: "",
     };
   },
   mounted() {
-    // TODO: get current date and query data with it
     this.$http
       .post(
         "https://www.sportsnow.ch/platform/api/v1/public/provider/leone-academy-liebefeld/live_calendar",
         {
-          date: "2020-11-02", // 01
+          date: "2020-11-05", //this.getQueryDate(),
         }
       )
       .then((response) => {
@@ -67,6 +66,23 @@ export default {
           return x.date - y.date;
         })
         .slice(0, 3);
+      response.find((cl) => {
+        if (cl.date >= this.getQueryDate()) {
+          this.nextThreeClasses.push(cl);
+        }
+      });
+      console.log("CLASSES FOUND: ", this.nextThreeClasses);
+    },
+    getQueryDate() {
+      let today = new Date();
+      let dd = String(today.getDate()).padStart(2, "0");
+      let mm = String(today.getMonth() + 1).padStart(2, "0");
+      let yyyy = today.getFullYear();
+      console.log("TODAY IS: ", today.getDay());
+      let queryDate = yyyy + "-" + mm + "-" + dd;
+      console.log("WE QUERY: ", queryDate);
+      // return queryDate;
+      return "2020-11-05";
     },
   },
   components: {
