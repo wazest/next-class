@@ -6,7 +6,9 @@
           <h5>Aktuelles Training</h5>
           <hr />
           <div class="card-deck">
-            <div v-if="!currentClass">Zur Zeit läuft kein Training</div>
+            <div class="info" v-if="!currentClass">
+              Zur Zeit läuft kein Training.
+            </div>
             <nextClass v-if="currentClass" :classData="currentClass" />
           </div>
         </div>
@@ -125,5 +127,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.info {
+  margin: 25px;
 }
 </style>
