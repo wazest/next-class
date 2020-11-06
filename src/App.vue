@@ -5,7 +5,7 @@
         <div class="col-12">
           <h5>Aktuelles Training</h5>
           <hr />
-          <div class="card-columns">
+          <div class="card-deck">
             <div v-if="!currentClass">Zur Zeit läuft kein Training</div>
             <nextClass v-if="currentClass" :classData="currentClass" />
           </div>
@@ -15,7 +15,7 @@
         <div class="col-12">
           <h5>Kommende Trainings</h5>
           <hr />
-          <div class="card-columns">
+          <div class="card-deck">
             <nextClass
               v-for="classData in nextThreeClasses"
               :key="classData.id"
@@ -74,9 +74,7 @@ export default {
       let dd = String(today.getDate()).padStart(2, "0");
       let mm = String(today.getMonth() + 1).padStart(2, "0");
       let yyyy = today.getFullYear();
-      console.log("TODAY IS: ", today.getDay());
       let queryDate = yyyy + "-" + mm + "-" + dd;
-      console.log("WE QUERY: ", queryDate);
       return queryDate;
       // return "2020-11-05";
     },
@@ -86,7 +84,6 @@ export default {
       let mm = String(today.getMinutes()).padStart(2, "0");
 
       let time = hh + ":" + mm;
-      console.log("QUERY TIME: ", time);
       return time;
     },
     async fetchData() {
@@ -98,7 +95,6 @@ export default {
           }
         )
         .then((response) => {
-          console.log("SPORTSNOW_RESPONSE: ", response.data);
           if (response.data && response.data.length) {
             this.nextThreeClasses = [];
             this.currentClass = null;
