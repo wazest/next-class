@@ -3,25 +3,21 @@
     <div class="container mt-5">
       <div class="row">
         <div class="col-12">
-          <h2>Aktuelles Training</h2>
+          <h5>Aktuelles Training</h5>
           <hr />
           <div class="card-columns">
             <div v-if="!currentClass">Zur Zeit läuft kein Training</div>
-            <!-- <nextClass
-                v-for="classData in nextClassesSorted"
-                :key="classData.id"
-                :classData="classData"
-              /> -->
+            <nextClass v-if="currentClass" :classData="currentClass" />
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-12">
-          <h2>Kommende Trainings</h2>
+          <h5>Kommende Trainings</h5>
           <hr />
           <div class="card-columns">
             <nextClass
-              v-for="classData in classesSortedbyDate"
+              v-for="classData in nextThreeClasses"
               :key="classData.id"
               :classData="classData"
             />
@@ -39,36 +35,36 @@ export default {
   name: "App",
   data() {
     return {
-      classesSortedbyDate: "",
+      classesSortedbyDate: null,
       nextThreeClasses: [],
-      currentClass: "",
+      currentClass: null,
+      loading: true,
+      errored: false,
     };
   },
   mounted() {
-    this.$http
-      .post(
-        "https://www.sportsnow.ch/platform/api/v1/public/provider/leone-academy-liebefeld/live_calendar",
-        {
-          date: "2020-11-05", //this.getQueryDate(),
-        }
-      )
-      .then((response) => {
-        console.log("SPORTSNOW_RESPONSE: ", response.data);
-        response.data &&
-          response.data.length &&
-          this.processData(response.data);
-      });
+    this.fetchData();
   },
   methods: {
     async processData(response) {
-      this.classesSortedbyDate = response
-        .sort((x, y) => {
-          return x.date - y.date;
-        })
-        .slice(0, 3);
+      this.classesSortedbyDate = response.sort((x, y) => {
+        return x.date - y.date;
+      });
       response.find((cl) => {
         if (cl.date >= this.getQueryDate()) {
-          this.nextThreeClasses.push(cl);
+          if (
+            cl.time_begin > this.getQueryTime() &&
+            this.nextThreeClasses.length <= 2
+          ) {
+            this.nextThreeClasses.push(cl);
+          }
+          if (
+            cl.date === this.getQueryDate() &&
+            cl.time_begin < this.getQueryTime() &&
+            cl.time_end > this.getQueryTime()
+          ) {
+            this.currentClass = cl;
+          }
         }
       });
       console.log("CLASSES FOUND: ", this.nextThreeClasses);
@@ -81,8 +77,42 @@ export default {
       console.log("TODAY IS: ", today.getDay());
       let queryDate = yyyy + "-" + mm + "-" + dd;
       console.log("WE QUERY: ", queryDate);
-      // return queryDate;
-      return "2020-11-05";
+      return queryDate;
+      // return "2020-11-05";
+    },
+    getQueryTime() {
+      let today = new Date();
+      let hh = String(today.getHours()).padStart(2, "0");
+      let mm = String(today.getMinutes()).padStart(2, "0");
+
+      let time = hh + ":" + mm;
+      console.log("QUERY TIME: ", time);
+      return time;
+    },
+    async fetchData() {
+      this.$http
+        .post(
+          "https://www.sportsnow.ch/platform/api/v1/public/provider/leone-academy-liebefeld/live_calendar",
+          {
+            date: this.getQueryDate(),
+          }
+        )
+        .then((response) => {
+          console.log("SPORTSNOW_RESPONSE: ", response.data);
+          if (response.data && response.data.length) {
+            this.nextThreeClasses = [];
+            this.currentClass = null;
+            this.processData(response.data);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => {
+          this.loading = false;
+          setTimeout(() => this.fetchData(), 2 * 60 * 1000); // 2min
+        });
     },
   },
   components: {
