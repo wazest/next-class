@@ -46,7 +46,7 @@ export default {
         return require("../assets/img/kb-sparring.jpg");
       }
       if (cl.classData.name && cl.classData.name.includes("Athletik")) {
-        return require("../assets/img/athletik.jpg");
+        return require("../assets/img/athletik01.jpg");
       }
       if (cl.classData.name && cl.classData.name.includes("Kinder")) {
         return require("../assets/img/kids.jpg");
