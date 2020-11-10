@@ -2,7 +2,7 @@
   <div id="app">
     <div class="container mt-5">
       <div class="row">
-        <div class="col-12">
+        <div class="col-16">
           <h5>Aktuelles Training</h5>
           <hr />
           <div class="card-columns">
@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-12">
+        <div class="col-16">
           <h5>Kommende Trainings</h5>
           <hr />
           <div class="card-deck">
@@ -81,13 +81,13 @@ export default {
       // return "2020-11-05";
     },
     getQueryTime() {
-      let today = new Date();
-      let hh = String(today.getHours()).padStart(2, "0");
-      let mm = String(today.getMinutes()).padStart(2, "0");
+      // let today = new Date();
+      // let hh = String(today.getHours()).padStart(2, "0");
+      // let mm = String(today.getMinutes()).padStart(2, "0");
 
-      let time = hh + ":" + mm;
-      return time;
-      // return "12:30";
+      // let time = hh + ":" + mm;
+      // return time;
+      return "19:01";
     },
     async fetchData() {
       this.$http

@@ -64,6 +64,7 @@ export default {
 .card-img-top {
   width: 100%;
   height: 8vw;
+  min-height: 160px;
   object-fit: cover;
 }
 </style>
