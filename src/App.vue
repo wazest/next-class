@@ -38,6 +38,7 @@ export default {
   data() {
     return {
       classesSortedbyDate: null,
+      classesSortedbyDateTime: null,
       nextThreeClasses: [],
       currentClass: null,
       loading: true,
@@ -52,12 +53,25 @@ export default {
       this.classesSortedbyDate = response.sort((x, y) => {
         return x.date - y.date;
       });
-      response.find((cl) => {
+      this.classesSortedbyDateTime = this.classesSortedbyDate.sort((x, y) => {
+        return x.time_begin - y.time_begin;
+      });
+
+      this.classesSortedbyDateTime.find((cl) => {
         if (cl.date >= this.getQueryDate()) {
           if (
             cl.time_begin > this.getQueryTime() &&
+            cl.date == this.getQueryDate() &&
             this.nextThreeClasses.length <= 2
           ) {
+            // coming classes this day
+            this.nextThreeClasses.push(cl);
+          }
+          if (
+            cl.date > this.getQueryDate() &&
+            this.nextThreeClasses.length <= 2
+          ) {
+            // coming classes next day
             this.nextThreeClasses.push(cl);
           }
           if (
@@ -69,7 +83,6 @@ export default {
           }
         }
       });
-      console.log("CLASSES FOUND: ", this.nextThreeClasses);
     },
     getQueryDate() {
       let today = new Date();
@@ -81,13 +94,13 @@ export default {
       // return "2020-11-05";
     },
     getQueryTime() {
-      // let today = new Date();
-      // let hh = String(today.getHours()).padStart(2, "0");
-      // let mm = String(today.getMinutes()).padStart(2, "0");
+      let today = new Date();
+      let hh = String(today.getHours()).padStart(2, "0");
+      let mm = String(today.getMinutes()).padStart(2, "0");
 
-      // let time = hh + ":" + mm;
-      // return time;
-      return "19:01";
+      let time = hh + ":" + mm;
+      return time;
+      // return "19:01";
     },
     async fetchData() {
       this.$http
