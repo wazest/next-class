@@ -5,7 +5,7 @@
         <div class="col-12">
           <h5>Aktuelles Training</h5>
           <hr />
-          <div class="card-deck">
+          <div class="card-columns">
             <div class="info" v-if="!currentClass">
               Zur Zeit läuft kein Training.
             </div>
@@ -87,6 +87,7 @@ export default {
 
       let time = hh + ":" + mm;
       return time;
+      // return "12:30";
     },
     async fetchData() {
       this.$http
@@ -129,6 +130,7 @@ export default {
   margin-top: 60px;
 }
 .info {
-  margin: 25px;
+  margin: 60px;
+  float: left;
 }
 </style>

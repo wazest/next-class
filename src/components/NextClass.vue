@@ -54,9 +54,16 @@ export default {
       if (cl.classData.name && cl.classData.name.includes("Yoga")) {
         return require("../assets/img/yoga.jpg");
       }
+      return require("../assets/img/AcademyRoom.jpg");
     },
   },
 };
 </script>
 
-<style></style>
+<style scoped>
+.card-img-top {
+  width: 100%;
+  height: 8vw;
+  object-fit: cover;
+}
+</style>
